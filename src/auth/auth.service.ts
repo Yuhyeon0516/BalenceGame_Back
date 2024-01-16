@@ -7,12 +7,53 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { InjectRepository } from "@nestjs/typeorm";
+import axios from "axios";
 import { randomBytes, scrypt as _scrypt } from "crypto";
 import { User } from "src/entities/user.entity";
 import { Repository } from "typeorm";
 import { promisify } from "util";
 
 const scrypt = promisify(_scrypt);
+
+function randomNicknameGenerator() {
+    const names = [
+        "미르",
+        "미리내",
+        "온새미로",
+        "시나브로",
+        "가람",
+        "그린비",
+        "아라",
+        "마루",
+        "가온길",
+        "비나리",
+        "한울",
+        "윤슬",
+        "물비늘",
+        "타니",
+        "나린",
+        "아리아",
+        "수피아",
+        "푸실",
+        "아토",
+        "희나리",
+        "단미",
+        "휘들램",
+    ];
+
+    const name = names[Math.floor(Math.random() * names.length)];
+    const number = Math.floor(Math.random() * 9999);
+
+    return `${name}${number}`;
+}
+
+async function hashingPassword(password: string) {
+    const salt = randomBytes(8).toString("hex");
+    const hash = (await scrypt(password, salt, 32)) as Buffer;
+    const result = salt + "..." + hash.toString("hex");
+
+    return result;
+}
 
 @Injectable()
 export class AuthService {
@@ -35,13 +76,11 @@ export class AuthService {
             throw new BadRequestException("이미 존재하는 닉네임입니다.");
         }
 
-        const salt = randomBytes(8).toString("hex");
-        const hash = (await scrypt(password, salt, 32)) as Buffer;
-        const result = salt + "..." + hash.toString("hex");
+        const hashedPassword = await hashingPassword(password);
 
         const createUser = this.repo.create({
             email,
-            password: result,
+            password: hashedPassword,
             nickname,
         });
         const user = await this.repo.save(createUser);
@@ -88,5 +127,51 @@ export class AuthService {
         const users = await this.repo.find({ where: { uid: id } });
 
         return users[0] || null;
+    }
+
+    async signinNaver(code: string, state: string) {
+        const clientId = this.configService.get<string>("NAVER_CLIENT_ID");
+        const clientSecret = this.configService.get<string>(
+            "NAVER_CLIENT_SECRET",
+        );
+        const tokenUrl = `https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=${clientId}&client_secret=${clientSecret}&code=${code}&state=${state}`;
+        const res = await axios.get(tokenUrl);
+
+        const socialAccessToken = res.data.access_token;
+        const headers = {
+            Authorization: "Bearer " + socialAccessToken,
+        };
+
+        const profileUrl = "https://openapi.naver.com/v1/nid/me";
+
+        const {
+            data: {
+                response: { email },
+            },
+        } = await axios.get(profileUrl, { headers });
+
+        let user = await this.repo.findOne({ where: { email } });
+
+        if (!user) {
+            const nickname = randomNicknameGenerator();
+            const password = await hashingPassword("oauth");
+
+            const createdUser = await this.repo.create({
+                email,
+                password,
+                nickname,
+            });
+            user = await this.repo.save(createdUser);
+        }
+
+        const payload = {
+            id: user.uid,
+        };
+
+        const accessToken = this.jwtService.sign(payload, {
+            secret: this.configService.get<string>("JWT_SECRET"),
+        });
+
+        return Object.assign(user, { accessToken });
     }
 }

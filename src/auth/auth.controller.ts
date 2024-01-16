@@ -1,17 +1,25 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Get,
+    Param,
+    Post,
+    Query,
+    Req,
+    UseGuards,
+} from "@nestjs/common";
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { UserDto } from "./dtos/user.dto";
 import { Serialize } from "src/interceptors/serialize.interceptor";
-import { AuthGuard } from "src/guard/auth.guard";
 
 @ApiTags("사용자관련 API")
 @Controller("auth")
+@Serialize(UserDto.Response.SignSuccess)
 export class AuthController {
     constructor(private authService: AuthService) {}
 
     @Post("/signup")
-    @Serialize(UserDto.Response.SignSuccess)
     @ApiBody({ type: UserDto.Request.Signup })
     @ApiOperation({ summary: "회원가입", description: "사용자 정보를 추가" })
     @ApiResponse({
@@ -32,7 +40,6 @@ export class AuthController {
     }
 
     @Post("/signin")
-    @Serialize(UserDto.Response.SignSuccess)
     @ApiOperation({ summary: "로그인", description: "로그인 시도" })
     @ApiResponse({
         status: 201,
@@ -44,4 +51,13 @@ export class AuthController {
     signin(@Body() body: UserDto.Request.Signin) {
         return this.authService.signin(body.email, body.password);
     }
+
+    @Get("/social/naver")
+    signinNaver(@Query("code") code: string, @Query("state") state: string) {
+        return this.authService.signinNaver(code, state);
+    }
+
+    @Get("/social/kakao")
+    signinKakao() {}
 }
+// https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=9b0IYJ7hk1RJj0NXVjGZ&state=0123456789101112&redirect_uri=http://localhost:8080/auth/social/naver
