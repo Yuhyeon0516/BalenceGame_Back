@@ -8,7 +8,13 @@ import {
     Req,
     UseGuards,
 } from "@nestjs/common";
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import {
+    ApiBody,
+    ApiOperation,
+    ApiQuery,
+    ApiResponse,
+    ApiTags,
+} from "@nestjs/swagger";
 import { AuthService } from "./auth.service";
 import { UserDto } from "./dtos/user.dto";
 import { Serialize } from "src/interceptors/serialize.interceptor";
@@ -53,11 +59,32 @@ export class AuthController {
     }
 
     @Get("/social/naver")
+    @ApiOperation({
+        summary: "네이버 로그인",
+        description: "네이버 로그인 또는 회원가입 시도",
+    })
+    @ApiQuery({ name: "code", description: "Naver OAuth를 통해 가져온 code" })
+    @ApiQuery({ name: "state", description: "Naver OAuth를 통해 가져온 state" })
+    @ApiResponse({
+        status: 200,
+        description: "로그인 성공",
+        type: UserDto.Response.SignSuccess,
+    })
     signinNaver(@Query("code") code: string, @Query("state") state: string) {
         return this.authService.signinNaver(code, state);
     }
 
     @Get("/social/kakao")
+    @ApiOperation({
+        summary: "카카오 로그인",
+        description: "카카오 로그인 또는 회원가입 시도",
+    })
+    @ApiQuery({ name: "code", description: "Kakao OAuth를 통해 가져온 code" })
+    @ApiResponse({
+        status: 200,
+        description: "로그인 성공",
+        type: UserDto.Response.SignSuccess,
+    })
     signinKakao(@Query("code") code: string) {
         return this.authService.signinKakao(code);
     }
