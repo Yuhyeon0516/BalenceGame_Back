@@ -45,7 +45,7 @@ export namespace UserDto {
 
             @ApiProperty({
                 description: "액세스 토큰",
-                example: "abcdefghijdhfjdsahfdsjkfhjskk",
+                example: "{{token}}",
             })
             @Expose()
             accessToken: string;
