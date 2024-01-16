@@ -156,7 +156,53 @@ export class AuthService {
             const nickname = randomNicknameGenerator();
             const password = await hashingPassword("oauth");
 
-            const createdUser = await this.repo.create({
+            const createdUser = this.repo.create({
+                email,
+                password,
+                nickname,
+            });
+            user = await this.repo.save(createdUser);
+        }
+
+        const payload = {
+            id: user.uid,
+        };
+
+        const accessToken = this.jwtService.sign(payload, {
+            secret: this.configService.get<string>("JWT_SECRET"),
+        });
+
+        return Object.assign(user, { accessToken });
+    }
+
+    async signinKakao(code: string) {
+        const clientId = this.configService.get<string>("KAKAO_RESTAPI_KEY");
+        const clientSecret = this.configService.get<string>(
+            "KAKAO_CLIENT_SECRET",
+        );
+        const tokenUrl = `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${clientId}&redirect_uri=http://localhost:8080/auth/social/kakao&code=${code}&client_secret=${clientSecret}`;
+        const res = await axios.get(tokenUrl);
+
+        const socialAccessToken = res.data.access_token;
+        const headers = {
+            Authorization: "Bearer " + socialAccessToken,
+        };
+
+        const profileUrl = "https://kapi.kakao.com/v2/user/me";
+
+        const {
+            data: {
+                kakao_account: { email },
+            },
+        } = await axios.get(profileUrl, { headers });
+
+        let user = await this.repo.findOne({ where: { email } });
+
+        if (!user) {
+            const nickname = randomNicknameGenerator();
+            const password = await hashingPassword("oauth");
+
+            const createdUser = this.repo.create({
                 email,
                 password,
                 nickname,
