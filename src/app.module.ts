@@ -5,6 +5,7 @@ import { TypeOrmConfigService } from "./database/database.config";
 import { AuthModule } from "./auth/auth.module";
 import { APP_PIPE } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
+import { GamesModule } from './games/games.module';
 
 @Module({
     imports: [
@@ -18,6 +19,8 @@ import { JwtModule } from "@nestjs/jwt";
         }),
 
         AuthModule,
+
+        GamesModule,
     ],
     controllers: [],
     providers: [
