@@ -83,4 +83,10 @@ export class AuthService {
 
         return Object.assign(user, { accessToken });
     }
+
+    async findById(id: number) {
+        const users = await this.repo.find({ where: { uid: id } });
+
+        return users[0] || null;
+    }
 }
