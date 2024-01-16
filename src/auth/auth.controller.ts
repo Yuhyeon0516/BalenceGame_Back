@@ -58,6 +58,7 @@ export class AuthController {
     }
 
     @Get("/social/kakao")
-    signinKakao() {}
+    signinKakao(@Query("code") code: string) {
+        return this.authService.signinKakao(code);
+    }
 }
-// https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=9b0IYJ7hk1RJj0NXVjGZ&state=0123456789101112&redirect_uri=http://localhost:8080/auth/social/naver
