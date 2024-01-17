@@ -125,10 +125,12 @@ export namespace GamesDto {
                     {
                         description: "내용",
                         writer: "test5",
+                        createdAt: "2024-01-17T00:35:10.687Z",
                     },
                     {
                         description: "내용2",
                         writer: "test5",
+                        createdAt: "2024-01-17T00:35:10.687Z",
                     },
                 ],
             })
