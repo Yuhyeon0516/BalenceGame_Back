@@ -11,6 +11,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Expose, Transform, Type } from "class-transformer";
 import { UserDto } from "src/auth/dtos/user.dto";
 import { Serialize } from "src/interceptors/serialize.interceptor";
+import { CommentDto } from "./comment.dto";
 
 export namespace GamesDto {
     export namespace Request {
@@ -111,6 +112,21 @@ export namespace GamesDto {
                 },
             })
             writer: UserDto.Response.AllGames;
+
+            @Expose()
+            @ApiProperty({
+                description: "해당 게임의 댓글",
+                example: [
+                    {
+                        description: "재미없어",
+                    },
+                    {
+                        description: "재미있네",
+                    },
+                ],
+            })
+            @Type(() => CommentDto.Response.AllGames)
+            comment: CommentDto.Response.AllGames[];
         }
     }
 }

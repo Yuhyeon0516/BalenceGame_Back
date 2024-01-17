@@ -21,7 +21,7 @@ export class Comment {
     @CreateDateColumn({ default: new Date(), type: "timestamp" })
     createdAt: Date;
 
-    @ManyToOne(() => User, (user) => user.uid)
+    @ManyToOne(() => User, (user) => user.uid, { eager: true })
     writer: User;
 
     @ManyToOne(() => Games, (games) => games.comment)

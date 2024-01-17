@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Game } from "src/entities/game.entity";
 import { Games } from "src/entities/games.entity";
@@ -28,16 +28,25 @@ export class GamesService {
 
     async allGames() {
         return await this.repo.find({
-            relations: ["game", "writer"],
+            relations: ["game", "writer", "comment"],
         });
     }
 
     async categoryGames(category: string) {
         const games = await this.repo.find({
             where: { category },
-            relations: ["game", "writer"],
+            relations: ["game", "writer", "comment"],
         });
 
         return games.length ? games : null;
+    }
+
+    async findById(gamesId: number) {
+        const games = await this.repo.findOne({
+            where: { gamesId },
+            relations: ["game", "writer", "comment"],
+        });
+
+        return games;
     }
 }
