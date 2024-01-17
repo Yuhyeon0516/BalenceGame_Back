@@ -50,5 +50,10 @@ export namespace UserDto {
             @Expose()
             accessToken: string;
         }
+
+        export class AllGames {
+            @Expose()
+            nickname: string;
+        }
     }
 }

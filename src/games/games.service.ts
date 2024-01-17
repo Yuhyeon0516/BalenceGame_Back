@@ -25,4 +25,10 @@ export class GamesService {
 
         return this.repo.save(games);
     }
+
+    async allGames() {
+        return await this.repo.find({
+            relations: ["game", "writer"],
+        });
+    }
 }

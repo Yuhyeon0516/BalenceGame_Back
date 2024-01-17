@@ -4,6 +4,7 @@ import {
     Get,
     Headers,
     Post,
+    Query,
     Request,
     UseGuards,
 } from "@nestjs/common";
@@ -20,6 +21,7 @@ import {
 } from "@nestjs/swagger";
 import { GamesDto } from "./dtos/games.dto";
 import { AuthGuard } from "src/guard/auth.guard";
+import { Serialize } from "src/interceptors/serialize.interceptor";
 
 @Controller("games")
 @ApiTags("게임 API")
@@ -62,5 +64,17 @@ export class GamesController {
         );
 
         return;
+    }
+
+    @Get()
+    @Serialize(GamesDto.Response.AllGames)
+    @ApiOperation({ summary: "모든 게임 조회", description: "모든 게임 조회" })
+    @ApiResponse({
+        status: 200,
+        description: "모든 게임 조회 성공",
+        type: [GamesDto.Response.AllGames],
+    })
+    async allGames() {
+        return this.gamesService.allGames();
     }
 }
