@@ -49,4 +49,8 @@ export class GamesService {
 
         return games;
     }
+
+    async update(games: Partial<Games>) {
+        return this.repo.save(games);
+    }
 }

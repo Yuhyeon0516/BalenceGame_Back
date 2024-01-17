@@ -12,4 +12,8 @@ export class GameService {
 
         return this.repo.save(game);
     }
+
+    update(game: Partial<Game>) {
+        return this.repo.save(game);
+    }
 }

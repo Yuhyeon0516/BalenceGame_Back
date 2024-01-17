@@ -2,6 +2,7 @@ import {
     ArrayMaxSize,
     ArrayMinSize,
     IsArray,
+    IsNumber,
     IsString,
     Length,
     ValidateNested,
@@ -41,6 +42,12 @@ export namespace GamesDto {
                 ],
             })
             game: GameDto.Request.Create[];
+        }
+
+        export class SelectGame {
+            @IsNumber()
+            @ApiProperty({ description: "선택된 게임의 ID", example: 1 })
+            gameId: number;
         }
     }
 
