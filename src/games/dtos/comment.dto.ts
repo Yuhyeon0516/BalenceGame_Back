@@ -1,7 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Expose, Transform, Type } from "class-transformer";
+import { Expose, Transform } from "class-transformer";
 import { IsString } from "class-validator";
-import { UserDto } from "src/auth/dtos/user.dto";
 
 export namespace CommentDto {
     export namespace Request {
@@ -31,6 +30,13 @@ export namespace CommentDto {
             })
             @Transform(({ obj }) => obj.writer.nickname)
             writer: string;
+
+            @Expose()
+            @ApiProperty({
+                description: "댓글 작성 시간",
+                example: "2024-01-17T00:35:10.687Z",
+            })
+            createdAt: Date;
         }
     }
 }
