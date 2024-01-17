@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Games } from "./games.entity";
 
 @Entity()
 export class Game {
@@ -16,4 +17,7 @@ export class Game {
 
     @Column({ default: 0 })
     selectedRatio: number;
+
+    @ManyToOne(() => Games, (games) => games.game)
+    games: Games;
 }

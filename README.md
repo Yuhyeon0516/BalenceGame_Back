@@ -19,8 +19,8 @@ Games: {
     createdAt: Date;
     totalPlayer: number;
     writer: User;
-    gameDetails: Game[];
-    comments: Comment[];
+    game: Game[];
+    comment: Comment[];
 }
 
 Game: {

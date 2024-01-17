@@ -1,11 +1,10 @@
 import { Module, ValidationPipe } from "@nestjs/common";
-import { ConfigModule, ConfigService } from "@nestjs/config";
+import { ConfigModule } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { TypeOrmConfigService } from "./database/database.config";
 import { AuthModule } from "./auth/auth.module";
 import { APP_PIPE } from "@nestjs/core";
-import { JwtModule } from "@nestjs/jwt";
-import { GamesModule } from './games/games.module';
+import { GamesModule } from "./games/games.module";
 
 @Module({
     imports: [
