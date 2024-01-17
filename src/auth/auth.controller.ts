@@ -58,6 +58,17 @@ export class AuthController {
         return this.authService.signin(body.email, body.password);
     }
 
+    @Get("/signout")
+    @ApiOperation({ summary: "로그아웃", description: "로그아웃 시도" })
+    @ApiResponse({
+        status: 200,
+        description: "로그아웃 성공",
+    })
+    @ApiResponse({ status: 400, description: "로그아웃 실패" })
+    signout() {
+        return;
+    }
+
     @Get("/social/naver")
     @ApiOperation({
         summary: "네이버 로그인",
