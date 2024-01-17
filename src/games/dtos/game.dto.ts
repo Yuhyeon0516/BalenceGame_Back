@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { Expose } from "class-transformer";
 import { IsString } from "class-validator";
 
 export namespace GameDto {
@@ -20,5 +21,22 @@ export namespace GameDto {
         }
     }
 
-    export namespace Response {}
+    export namespace Response {
+        export class AllGames {
+            @Expose()
+            gameId: number;
+
+            @Expose()
+            title: string;
+
+            @Expose()
+            description: string;
+
+            @Expose()
+            selectedCount: number;
+
+            @Expose()
+            selectedRatio: number;
+        }
+    }
 }
