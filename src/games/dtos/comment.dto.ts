@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Expose, Type } from "class-transformer";
+import { Expose, Transform, Type } from "class-transformer";
 import { IsString } from "class-validator";
 import { UserDto } from "src/auth/dtos/user.dto";
 
@@ -29,8 +29,8 @@ export namespace CommentDto {
                 description: "작성자 닉네임",
                 example: "Nick",
             })
-            @Type(() => UserDto.Response.AllGames)
-            writer: UserDto.Response.AllGames;
+            @Transform(({ obj }) => obj.writer.nickname)
+            writer: string;
         }
     }
 }

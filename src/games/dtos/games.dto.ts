@@ -104,14 +104,12 @@ export namespace GamesDto {
             game: GameDto.Response.AllGames[];
 
             @Expose()
-            @Type(() => UserDto.Response.AllGames)
             @ApiProperty({
                 description: "게임을 만든 사람의 정보",
-                example: {
-                    nickname: "닉네임",
-                },
+                example: "닉네임",
             })
-            writer: UserDto.Response.AllGames;
+            @Transform(({ obj }) => obj.writer.nickname)
+            writer: string;
 
             @Expose()
             @ApiProperty({
@@ -119,15 +117,11 @@ export namespace GamesDto {
                 example: [
                     {
                         description: "내용",
-                        writer: {
-                            nickname: "test5",
-                        },
+                        writer: "test5",
                     },
                     {
                         description: "내용2",
-                        writer: {
-                            nickname: "test5",
-                        },
+                        writer: "test5",
                     },
                 ],
             })

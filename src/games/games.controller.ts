@@ -101,6 +101,10 @@ export class GamesController {
         summary: "게임에 댓글 작성",
         description: "게임에 댓글 작성",
     })
+    @ApiHeader({
+        name: "Authorization",
+        description: "Bearer {{token}}",
+    })
     @ApiBody({ type: CommentDto.Request.WriteComment })
     @ApiResponse({
         status: 201,
