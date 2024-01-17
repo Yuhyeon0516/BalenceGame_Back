@@ -1,35 +1,40 @@
-user: {
-email
-password
-nickname (중복방지 기능도 넣어야함)
-createdAt
-comments
-createdGames
-playedGames
+```typescript
+User: {
+    email: string;
+    password: string;
+    nickname: string;
+    createdAt: Date;
+    writedComments: Comment[];
+    createdGames: Games[];
+    playedGames: Games[];
 }
 
-game: {
-gameId: number;
-title: string;
-description: string;
-like: number;
-dislike: number;
-games:[
-{
-title: string;
-description: string;
-selectedCount: number;
-selectedRatio: number;
-},
-{
-title: string;
-description: string;
-selectedCount: number;
-selectedRatio: number;
-},
-];
-writer: User;
-createdAt: Date;
-comments: Comment[]
-totalPlayer: number;
+Games: {
+    gamesId: number;
+    category: string;
+    title: string;
+    description: string;
+    like: number;
+    dislike: number;
+    createdAt: Date;
+    totalPlayer: number;
+    writer: User;
+    gameDetails: Game[];
+    comments: Comment[];
 }
+
+Game: {
+    gameId: number;
+    title: string;
+    description: string;
+    selectedCount: number;
+    selectedRatio: number;
+}
+
+Comment: {
+    commentId: number;
+    description: string;
+    createdAt: Date;
+    writer: User;
+}
+```
