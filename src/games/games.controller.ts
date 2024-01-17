@@ -3,6 +3,7 @@ import {
     Controller,
     Get,
     Headers,
+    Param,
     Post,
     Query,
     Request,
@@ -76,5 +77,20 @@ export class GamesController {
     })
     async allGames() {
         return this.gamesService.allGames();
+    }
+
+    @Get("/:category")
+    @Serialize(GamesDto.Response.AllGames)
+    @ApiOperation({
+        summary: "카테고리별 게임 조회",
+        description: "카테고리별 게임 조회",
+    })
+    @ApiResponse({
+        status: 200,
+        description: "카테고리별 게임 조회 성공",
+        type: [GamesDto.Response.AllGames],
+    })
+    async categoryGames(@Param("category") category: string) {
+        return this.gamesService.categoryGames(category);
     }
 }

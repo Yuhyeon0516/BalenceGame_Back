@@ -31,4 +31,13 @@ export class GamesService {
             relations: ["game", "writer"],
         });
     }
+
+    async categoryGames(category: string) {
+        const games = await this.repo.find({
+            where: { category },
+            relations: ["game", "writer"],
+        });
+
+        return games.length ? games : null;
+    }
 }
