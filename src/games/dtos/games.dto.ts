@@ -118,10 +118,16 @@ export namespace GamesDto {
                 description: "해당 게임의 댓글",
                 example: [
                     {
-                        description: "재미없어",
+                        description: "내용",
+                        writer: {
+                            nickname: "test5",
+                        },
                     },
                     {
-                        description: "재미있네",
+                        description: "내용2",
+                        writer: {
+                            nickname: "test5",
+                        },
                     },
                 ],
             })
