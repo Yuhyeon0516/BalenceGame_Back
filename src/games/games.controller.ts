@@ -16,14 +16,14 @@ import {
     ApiResponse,
     ApiTags,
     ApiOperation,
-    ApiHeaders,
     ApiHeader,
 } from "@nestjs/swagger";
 import { GamesDto } from "./dtos/games.dto";
 import { AuthGuard } from "src/guard/auth.guard";
 import { Serialize } from "src/interceptors/serialize.interceptor";
 import { CommentDto } from "./dtos/comment.dto";
-import { Request } from "express";
+import { Games } from "src/entities/games.entity";
+import { Game } from "src/entities/game.entity";
 
 @Controller("games")
 @ApiTags("게임 API")
@@ -128,5 +128,69 @@ export class GamesController {
         this.commentService.writeComment(body.description, games, req.user);
 
         return;
+    }
+
+    @Post("/:gamesId/select")
+    @Serialize(GamesDto.Response.AllGames)
+    @ApiOperation({
+        summary: "투표",
+        description: "투표",
+    })
+    @ApiBody({ type: GamesDto.Request.SelectGame })
+    @ApiResponse({
+        status: 201,
+        description: "투표 완료",
+        type: GamesDto.Response.AllGames,
+    })
+    @ApiResponse({ status: 404, description: "Requests Miss" })
+    async selectGame(
+        @Param("gamesId") gamesId: string,
+        @Body() body: GamesDto.Request.SelectGame,
+    ) {
+        if (!gamesId) {
+            throw new NotFoundException("경로가 잘못되었습니다.");
+        }
+
+        const games = await this.gamesService.findById(parseInt(gamesId));
+
+        if (!games) {
+            throw new NotFoundException("게임을 찾을 수 없습니다.");
+        }
+
+        const [selectedGame] = games.game.filter(
+            (game) => game.gameId === body.gameId,
+        );
+
+        const [notSelectedGame] = games.game.filter(
+            (game) => game.gameId !== body.gameId,
+        );
+
+        if (!selectedGame) {
+            throw new NotFoundException("선택된 게임 ID가 잘못되었습니다.");
+        }
+
+        Object.assign(games, {
+            totalPlayer: games.totalPlayer + 1,
+        } as Games);
+
+        await this.gamesService.update(games);
+
+        Object.assign(selectedGame, {
+            selectedCount: selectedGame.selectedCount + 1,
+            selectedRatio: Math.round(
+                ((selectedGame.selectedCount + 1) / games.totalPlayer) * 100,
+            ),
+        } as Game);
+
+        Object.assign(notSelectedGame, {
+            selectedRatio: Math.round(
+                (notSelectedGame.selectedCount / games.totalPlayer) * 100,
+            ),
+        } as Game);
+
+        await this.gameService.update(selectedGame);
+        await this.gameService.update(notSelectedGame);
+
+        return games;
     }
 }
