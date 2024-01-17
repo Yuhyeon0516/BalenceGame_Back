@@ -8,6 +8,7 @@ import {
     RelationId,
 } from "typeorm";
 import { User } from "./user.entity";
+import { Games } from "./games.entity";
 
 @Entity()
 export class Comment {
@@ -22,4 +23,7 @@ export class Comment {
 
     @ManyToOne(() => User, (user) => user.uid)
     writer: User;
+
+    @ManyToOne(() => Games, (games) => games.comment)
+    games: Games;
 }

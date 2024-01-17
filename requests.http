@@ -18,5 +18,13 @@ Content-Type: application/json
     "password": "12345678"
 }
 
-### test
-GET  http://localhost:8080/auth/asd
+### 게임 생성
+POST http://localhost:8080/games/create
+
+Content-Type: application/json
+
+{
+    "category" : "상황",
+    "title" : "test",
+    "description": "test description"
+}

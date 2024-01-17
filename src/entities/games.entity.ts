@@ -21,9 +21,6 @@ export class Games {
     @Column()
     title: string;
 
-    @Column()
-    ddescription: string;
-
     @Column({ default: 0 })
     like: number;
 
@@ -33,15 +30,18 @@ export class Games {
     @CreateDateColumn({ default: new Date(), type: "timestamp" })
     createdAt: Date;
 
-    @Column()
+    @Column({ default: 0 })
     totalPlayer: number;
 
     @ManyToOne(() => User, (user) => user.createdGames)
     writer: User;
 
-    @OneToMany(() => Game, (game) => game.gameId)
+    @OneToMany(() => Game, (game) => game.games)
     game: Game[];
 
-    @OneToMany(() => Comment, (comment) => comment.commentId)
+    @OneToMany(() => Comment, (comment) => comment.games)
     comment: Comment[];
+
+    @ManyToOne(() => User, (user) => user.playedGames)
+    player: User;
 }
