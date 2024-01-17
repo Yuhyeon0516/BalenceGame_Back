@@ -2,11 +2,10 @@ import {
     Body,
     Controller,
     Get,
-    Headers,
+    NotFoundException,
     Param,
     Post,
-    Query,
-    Request,
+    Req,
     UseGuards,
 } from "@nestjs/common";
 import { GamesService } from "./games.service";
@@ -23,6 +22,8 @@ import {
 import { GamesDto } from "./dtos/games.dto";
 import { AuthGuard } from "src/guard/auth.guard";
 import { Serialize } from "src/interceptors/serialize.interceptor";
+import { CommentDto } from "./dtos/comment.dto";
+import { Request } from "express";
 
 @Controller("games")
 @ApiTags("게임 API")
@@ -46,7 +47,7 @@ export class GamesController {
         description: "게임 생성 성공",
     })
     @ApiResponse({ status: 401, description: "접근권한 없음" })
-    async create(@Body() body: GamesDto.Request.Create, @Request() req: any) {
+    async create(@Body() body: GamesDto.Request.Create, @Req() req: any) {
         const game1 = await this.gameService.create(
             body.game[0].title,
             body.game[0].description,
@@ -92,5 +93,36 @@ export class GamesController {
     })
     async categoryGames(@Param("category") category: string) {
         return this.gamesService.categoryGames(category);
+    }
+
+    @Post("/:gamesId/comment")
+    @UseGuards(AuthGuard)
+    @ApiOperation({
+        summary: "게임에 댓글 작성",
+        description: "게임에 댓글 작성",
+    })
+    @ApiBody({ type: CommentDto.Request.WriteComment })
+    @ApiResponse({
+        status: 201,
+        description: "댓글 작성 성공",
+    })
+    @ApiResponse({ status: 401, description: "접근권한 없음" })
+    async writeComment(
+        @Param("gamesId") gamesId: string,
+        @Body() body: CommentDto.Request.WriteComment,
+        @Req() req: any,
+    ) {
+        if (!gamesId) {
+            throw new NotFoundException("경로가 잘못되었습니다.");
+        }
+        const games = await this.gamesService.findById(parseInt(gamesId));
+
+        if (!games) {
+            throw new NotFoundException("게임을 찾을 수 없습니다.");
+        }
+
+        this.commentService.writeComment(body.description, games, req.user);
+
+        return;
     }
 }

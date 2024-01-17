@@ -53,6 +53,10 @@ export namespace UserDto {
 
         export class AllGames {
             @Expose()
+            @ApiProperty({
+                description: "작성자 닉네임",
+                example: "nick",
+            })
             nickname: string;
         }
     }
