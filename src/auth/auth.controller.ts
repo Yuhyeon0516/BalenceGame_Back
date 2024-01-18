@@ -57,7 +57,6 @@ export class AuthController {
     @ApiResponse({ status: 400, description: "비밀번호가 틀렸을때" })
     @ApiResponse({ status: 401, description: "존재하지 않는 이메일" })
     signin(@Body() body: UserDto.Request.Signin) {
-        console.log(body);
         return this.authService.signin(body.email, body.password);
     }
 
