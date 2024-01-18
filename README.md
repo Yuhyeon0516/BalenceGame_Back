@@ -1,6 +1,7 @@
 # AWS 배포
 
 -   배포 간 참고자료
+
     -   https://velog.io/@mintmin0320/Nest.js-%EC%84%9C%EB%B2%84-%EB%B0%B0%ED%8F%AC%ED%95%98%EA%B8%B02-%ED%84%B0%EB%AF%B8%EB%84%90%EC%97%90%EC%84%9C-%EC%84%9C%EB%B2%84-%EC%8B%A4%ED%96%89%ED%95%98%EA%B8%B0
     -   https://velog.io/@kangukii97/NestJS-EC2-%ED%94%84%EB%A6%AC%ED%8B%B0%EC%96%B4-%EB%B0%B0%ED%8F%AC-%EA%B3%BC%EC%A0%95
     -   https://velog.io/@jsi06138/PM2%EB%A1%9C-%EB%AC%B4%EC%A4%91%EB%8B%A8-%EB%B0%B0%ED%8F%AC-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0
@@ -12,3 +13,6 @@
     -   https://velog.io/@server30sopt/AWS-AWS-rds-postgreSQL-%ED%99%98%EA%B2%BD%EC%84%B8%ED%8C%85
     -   https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html#UsingWithRDS.SSL.CertificatesAllRegions
     -   https://caddyserver.com/docs
+
+-   현재 해당 포트에 활성화 된 서비스`sudo lsof -i :80`
+-   Caddy 실행 전 Nginx stop 필요 `sudo service nginx stop`
