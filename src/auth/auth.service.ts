@@ -123,46 +123,28 @@ export class AuthService {
         return Object.assign(user, { accessToken });
     }
 
+    async findByEmail(email: string) {
+        const user = await this.repo.findOne({ where: { email } });
+
+        return user || null;
+    }
+
     async findById(id: number) {
         const users = await this.repo.find({ where: { uid: id } });
 
         return users[0] || null;
     }
 
-    async signinNaver(code: string, state: string) {
-        const clientId = this.configService.get<string>("NAVER_CLIENT_ID");
-        const clientSecret = this.configService.get<string>(
-            "NAVER_CLIENT_SECRET",
-        );
-        const tokenUrl = `https://nid.naver.com/oauth2.0/token?grant_type=authorization_code&client_id=${clientId}&client_secret=${clientSecret}&code=${code}&state=${state}`;
-        const res = await axios.get(tokenUrl);
+    async createSocialUser(email: string) {
+        const nickname = randomNicknameGenerator();
+        const password = await hashingPassword("oauth");
 
-        const socialAccessToken = res.data.access_token;
-        const headers = {
-            Authorization: "Bearer " + socialAccessToken,
-        };
-
-        const profileUrl = "https://openapi.naver.com/v1/nid/me";
-
-        const {
-            data: {
-                response: { email },
-            },
-        } = await axios.get(profileUrl, { headers });
-
-        let user = await this.repo.findOne({ where: { email } });
-
-        if (!user) {
-            const nickname = randomNicknameGenerator();
-            const password = await hashingPassword("oauth");
-
-            const createdUser = this.repo.create({
-                email,
-                password,
-                nickname,
-            });
-            user = await this.repo.save(createdUser);
-        }
+        const createdUser = this.repo.create({
+            email,
+            password,
+            nickname,
+        });
+        const user = await this.repo.save(createdUser);
 
         const payload = {
             id: user.uid,
@@ -174,6 +156,8 @@ export class AuthService {
 
         return Object.assign(user, { accessToken });
     }
+
+    async signinNaver(code: string, state: string) {}
 
     async signinKakao(code: string) {
         const clientId = this.configService.get<string>("KAKAO_RESTAPI_KEY");
@@ -210,6 +194,18 @@ export class AuthService {
             user = await this.repo.save(createdUser);
         }
 
+        const payload = {
+            id: user.uid,
+        };
+
+        const accessToken = this.jwtService.sign(payload, {
+            secret: this.configService.get<string>("JWT_SECRET"),
+        });
+
+        return Object.assign(user, { accessToken });
+    }
+
+    generateToken(user: User) {
         const payload = {
             id: user.uid,
         };
