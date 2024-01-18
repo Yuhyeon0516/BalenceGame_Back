@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
 
+// // Product Version
 // @Injectable()
 // export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 //     constructor(private configService: ConfigService) {}
@@ -152,6 +153,7 @@ import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from "@nestjs/typeorm";
 //     }
 // }
 
+// DEV Version
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     constructor(private configService: ConfigService) {}

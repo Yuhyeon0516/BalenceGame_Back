@@ -218,4 +218,17 @@ export class GamesController {
 
         return await this.gamesService.update(games);
     }
+
+    @Get("/:gamesId/dislike")
+    async dislike(@Param("gamesId") gamesId: string) {
+        const games = await this.gamesService.findById(parseInt(gamesId));
+
+        if (!games) {
+            throw new NotFoundException("게임을 찾을 수 없습니다.");
+        }
+
+        Object.assign(games, { dislike: games.dislike + 1 });
+
+        return await this.gamesService.update(games);
+    }
 }
