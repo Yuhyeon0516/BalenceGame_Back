@@ -19,6 +19,8 @@
 
 # Social Login 구현 간 참고자료
 
+-   Naver Developer : https://developers.naver.com
+-   Kakao Developer : https://developers.kakao.com
 -   https://systorage.tistory.com/entry/Nestjs-Nestjs에서-소셜로그인을-구현하는-방법-featNaver
 -   https://elfinlas.github.io/nest_js/230404_naver_login_part01/
 -   https://github.com/2n-snails/nest-back/blob/main/src/auth/auth.service.ts
