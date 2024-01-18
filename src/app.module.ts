@@ -23,12 +23,12 @@ import { GamesModule } from "./games/games.module";
     ],
     controllers: [],
     providers: [
-        {
-            provide: APP_PIPE,
-            useValue: new ValidationPipe({
-                whitelist: true,
-            }),
-        },
+        // {
+        //     provide: APP_PIPE,
+        //     useValue: new ValidationPipe({
+        //         whitelist: true,
+        //     }),
+        // },
     ],
 })
 export class AppModule {}
