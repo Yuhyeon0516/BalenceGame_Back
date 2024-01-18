@@ -88,6 +88,10 @@ export class AuthController {
 
     @Get("/social/naver/cb")
     @UseGuards(NaverAuthGuard)
+    @ApiOperation({
+        summary: "네이버 로그인의 콜백",
+        description: "네이버 로그인의 콜백으로 데이터를 받아오는 곳",
+    })
     naverCB(@Req() req: any, @Res() res: Response) {
         const user = req.user;
         res.redirect(
@@ -111,6 +115,10 @@ export class AuthController {
 
     @Get("/social/kakao/cb")
     @UseGuards(KakaoAuthGuard)
+    @ApiOperation({
+        summary: "카카오 로그인의 콜백",
+        description: "카카오 로그인의 콜백으로 데이터를 받아오는 곳",
+    })
     kakaoCB(@Req() req: any, @Res() res: Response) {
         const user = req.user;
         res.redirect(

@@ -193,4 +193,29 @@ export class GamesController {
 
         return games;
     }
+
+    @Get("/:gamesId/like")
+    @Serialize(GamesDto.Response.AllGames)
+    @ApiOperation({
+        summary: "좋아요",
+        description: "좋아요 선택",
+    })
+    @ApiBody({ type: GamesDto.Request.SelectGame })
+    @ApiResponse({
+        status: 200,
+        description: "좋아요 표시 완료",
+        type: GamesDto.Response.AllGames,
+    })
+    @ApiResponse({ status: 404, description: "Requests Miss" })
+    async like(@Param("gamesId") gamesId: string) {
+        const games = await this.gamesService.findById(parseInt(gamesId));
+
+        if (!games) {
+            throw new NotFoundException("게임을 찾을 수 없습니다.");
+        }
+
+        Object.assign(games, { like: games.like + 1 });
+
+        return await this.gamesService.update(games);
+    }
 }
