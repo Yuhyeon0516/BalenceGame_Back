@@ -12,6 +12,6 @@ export class CommentService {
     async writeComment(description: string, games: Games, user: User) {
         const comment = this.repo.create({ description, games, writer: user });
 
-        return this.repo.save(comment);
+        return await this.repo.save(comment);
     }
 }
