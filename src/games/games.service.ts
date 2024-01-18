@@ -33,12 +33,10 @@ export class GamesService {
     }
 
     async categoryGames(category: string) {
-        const games = await this.repo.find({
+        return await this.repo.find({
             where: { category },
             relations: ["game", "writer", "comment"],
         });
-
-        return games.length ? games : null;
     }
 
     async findById(gamesId: number) {

@@ -53,7 +53,7 @@ export class GamesController {
             body.game[0].description,
         );
         const game2 = await this.gameService.create(
-            body.game[0].title,
+            body.game[1].title,
             body.game[1].description,
         );
 

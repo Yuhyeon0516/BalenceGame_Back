@@ -16,3 +16,10 @@
 
 -   현재 해당 포트에 활성화 된 서비스`sudo lsof -i :80`
 -   Caddy 실행 전 Nginx stop 필요 `sudo service nginx stop`
+
+# Social Login 구현 간 참고자료
+
+-   https://systorage.tistory.com/entry/Nestjs-Nestjs에서-소셜로그인을-구현하는-방법-featNaver
+-   https://elfinlas.github.io/nest_js/230404_naver_login_part01/
+-   https://github.com/2n-snails/nest-back/blob/main/src/auth/auth.service.ts
+-   https://velog.io/@soshin_dev/ERRHTTPHEADERSSENT-Cannot-set-headers-after-they-are-sent-to-the-client-오류
