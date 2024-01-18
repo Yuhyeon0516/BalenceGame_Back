@@ -43,6 +43,11 @@ export class GamesService {
         const games = await this.repo.findOne({
             where: { gamesId },
             relations: ["game", "writer", "comment"],
+            order: {
+                comment: {
+                    createdAt: "ASC",
+                },
+            },
         });
 
         return games;

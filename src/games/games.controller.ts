@@ -96,6 +96,7 @@ export class GamesController {
     }
 
     @Post("/:gamesId/comment")
+    @Serialize(GamesDto.Response.AllGames)
     @UseGuards(AuthGuard)
     @ApiOperation({
         summary: "게임에 댓글 작성",
@@ -109,6 +110,7 @@ export class GamesController {
     @ApiResponse({
         status: 201,
         description: "댓글 작성 성공",
+        type: GamesDto.Response.AllGames,
     })
     @ApiResponse({ status: 401, description: "접근권한 없음" })
     async writeComment(
@@ -125,9 +127,13 @@ export class GamesController {
             throw new NotFoundException("게임을 찾을 수 없습니다.");
         }
 
-        this.commentService.writeComment(body.description, games, req.user);
+        await this.commentService.writeComment(
+            body.description,
+            games,
+            req.user,
+        );
 
-        return;
+        return await this.gamesService.findById(parseInt(gamesId));
     }
 
     @Post("/:gamesId/select")
@@ -200,7 +206,6 @@ export class GamesController {
         summary: "좋아요",
         description: "좋아요 선택",
     })
-    @ApiBody({ type: GamesDto.Request.SelectGame })
     @ApiResponse({
         status: 200,
         description: "좋아요 표시 완료",
@@ -215,6 +220,30 @@ export class GamesController {
         }
 
         Object.assign(games, { like: games.like + 1 });
+
+        return await this.gamesService.update(games);
+    }
+
+    @Get("/:gamesId/dislike")
+    @Serialize(GamesDto.Response.AllGames)
+    @ApiOperation({
+        summary: "싫어요",
+        description: "싫어요 선택",
+    })
+    @ApiResponse({
+        status: 200,
+        description: "싫어요 표시 완료",
+        type: GamesDto.Response.AllGames,
+    })
+    @ApiResponse({ status: 404, description: "Requests Miss" })
+    async dislike(@Param("gamesId") gamesId: string) {
+        const games = await this.gamesService.findById(parseInt(gamesId));
+
+        if (!games) {
+            throw new NotFoundException("게임을 찾을 수 없습니다.");
+        }
+
+        Object.assign(games, { dislike: games.dislike + 1 });
 
         return await this.gamesService.update(games);
     }
