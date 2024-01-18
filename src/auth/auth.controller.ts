@@ -2,9 +2,7 @@ import {
     Body,
     Controller,
     Get,
-    Param,
     Post,
-    Query,
     Req,
     Res,
     UseGuards,
@@ -21,6 +19,7 @@ import { UserDto } from "./dtos/user.dto";
 import { Serialize } from "src/interceptors/serialize.interceptor";
 import { Response } from "express";
 import { NaverAuthGuard } from "src/guard/naver.auth.guard";
+import { KakaoAuthGuard } from "src/guard/kakao.auth.guard";
 
 @ApiTags("사용자관련 API")
 @Controller("auth")
@@ -84,7 +83,6 @@ export class AuthController {
     @ApiResponse({
         status: 200,
         description: "로그인 성공",
-        type: UserDto.Response.SignSuccess,
     })
     signinNaver() {}
 
@@ -98,22 +96,26 @@ export class AuthController {
         return res.status(200).send();
     }
 
-    // @Get("/social/kakao")
-    // @ApiOperation({
-    //     summary: "카카오 로그인",
-    //     description: "카카오 로그인 또는 회원가입 시도",
-    // })
-    // @ApiQuery({ name: "code", description: "Kakao OAuth를 통해 가져온 code" })
-    // @ApiResponse({
-    //     status: 200,
-    //     description: "로그인 성공",
-    //     type: UserDto.Response.SignSuccess,
-    // })
-    // async signinKakao(@Query("code") code: string, @Res() res: Response) {
-    //     const user = await this.authService.signinKakao(code);
-    //     return res
-    //         .status(200)
-    //         .send(user)
-    //         .redirect("http://localhost:3000/main");
-    // }
+    @Get("/social/kakao")
+    @UseGuards(KakaoAuthGuard)
+    @ApiOperation({
+        summary: "카카오 로그인",
+        description: "카카오 로그인 또는 회원가입 시도",
+    })
+    @ApiQuery({ name: "code", description: "Kakao OAuth를 통해 가져온 code" })
+    @ApiResponse({
+        status: 200,
+        description: "로그인 성공",
+    })
+    async signinKakao() {}
+
+    @Get("/social/kakao/cb")
+    @UseGuards(KakaoAuthGuard)
+    kakaoCB(@Req() req: any, @Res() res: Response) {
+        const user = req.user;
+        res.redirect(
+            `http://localhost:3000/auth/social/${user.uid}/${user.email}/${user.nickname}/${user.accessToken}`,
+        );
+        return res.status(200).send();
+    }
 }
