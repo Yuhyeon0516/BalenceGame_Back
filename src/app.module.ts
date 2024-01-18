@@ -27,6 +27,7 @@ import { GamesModule } from "./games/games.module";
             provide: APP_PIPE,
             useValue: new ValidationPipe({
                 whitelist: true,
+                transform: true,
             }),
         },
     ],

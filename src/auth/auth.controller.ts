@@ -6,6 +6,7 @@ import {
     Post,
     Query,
     Req,
+    Res,
     UseGuards,
 } from "@nestjs/common";
 import {
@@ -18,6 +19,7 @@ import {
 import { AuthService } from "./auth.service";
 import { UserDto } from "./dtos/user.dto";
 import { Serialize } from "src/interceptors/serialize.interceptor";
+import { Response } from "express";
 
 @ApiTags("사용자관련 API")
 @Controller("auth")
@@ -96,7 +98,11 @@ export class AuthController {
         description: "로그인 성공",
         type: UserDto.Response.SignSuccess,
     })
-    signinKakao(@Query("code") code: string) {
-        return this.authService.signinKakao(code);
+    async signinKakao(@Query("code") code: string, @Res() res: Response) {
+        const user = await this.authService.signinKakao(code);
+        return res
+            .status(200)
+            .send(user)
+            .redirect("http://localhost:3000/main");
     }
 }
