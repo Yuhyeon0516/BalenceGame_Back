@@ -13,7 +13,7 @@ async function bootstrap() {
 
     const apiDocsConfig = new DocumentBuilder()
         .setTitle("API Docs")
-        .setDescription("This is api docs")
+        .setDescription("밸런스 게임의 API Docs입니다.")
         .setVersion("1.0")
         .build();
 

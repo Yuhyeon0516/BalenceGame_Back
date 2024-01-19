@@ -137,5 +137,40 @@ export namespace GamesDto {
             @Type(() => CommentDto.Response.AllGames)
             comment: CommentDto.Response.AllGames[];
         }
+
+        export class MyInfo {
+            @Expose()
+            @ApiProperty({ description: "게임의 제목", example: "게임 제목 1" })
+            title: string;
+
+            @Expose()
+            @ApiProperty({ description: "좋아요의 수", example: 1 })
+            like: number;
+
+            @Expose()
+            @ApiProperty({ description: "좋아요의 수", example: 0 })
+            dislike: number;
+
+            @Expose()
+            @ApiProperty({
+                description: "게임이 생성된 날짜",
+                example: "2024-01-16T22:45:27.621Z",
+            })
+            createdAt: Date;
+
+            @Expose()
+            @ApiProperty({
+                description: "이 게임을 플레이한 횟수",
+                example: 123,
+            })
+            totalPlayer: number;
+
+            @Expose()
+            @ApiProperty({
+                description: "이게임의 선택지들",
+            })
+            @Type(() => GameDto.Response.MyInfo)
+            game: GameDto.Response.MyInfo[];
+        }
     }
 }

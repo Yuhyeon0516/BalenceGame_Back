@@ -1,6 +1,8 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
 import { IsEmail, IsString } from "class-validator";
+import { CommentDto } from "src/games/dtos/comment.dto";
+import { GamesDto } from "src/games/dtos/games.dto";
 
 export namespace UserDto {
     export namespace Request {
@@ -58,6 +60,22 @@ export namespace UserDto {
                 example: "nick",
             })
             nickname: string;
+        }
+
+        export class MyInfo {
+            @Expose()
+            @ApiProperty({
+                description: "작성했던 댓글",
+            })
+            @Type(() => CommentDto.Response.MyInfo)
+            writedComments: CommentDto.Response.MyInfo[];
+
+            @Expose()
+            @ApiProperty({
+                description: "만들었던 게임",
+            })
+            @Type(() => GamesDto.Response.MyInfo)
+            createdGames: GamesDto.Response.MyInfo[];
         }
     }
 }
