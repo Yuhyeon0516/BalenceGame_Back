@@ -38,5 +38,21 @@ export namespace CommentDto {
             })
             createdAt: Date;
         }
+
+        export class MyInfo {
+            @Expose()
+            @ApiProperty({
+                description: "댓글 내용",
+                example: "재미없는 게임이네!!",
+            })
+            description: string;
+
+            @Expose()
+            @ApiProperty({
+                description: "댓글 작성 시간",
+                example: "2024-01-17T00:35:10.687Z",
+            })
+            createdAt: Date;
+        }
     }
 }

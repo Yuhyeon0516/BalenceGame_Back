@@ -216,4 +216,11 @@ export class AuthService {
 
         return Object.assign(user, { accessToken });
     }
+
+    async getMyInfo(user: User) {
+        return await this.repo.findOne({
+            where: { uid: user.uid },
+            relations: ["writedComments", "createdGames", "createdGames.game"],
+        });
+    }
 }

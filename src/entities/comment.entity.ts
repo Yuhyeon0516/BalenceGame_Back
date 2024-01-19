@@ -24,6 +24,6 @@ export class Comment {
     @ManyToOne(() => User, (user) => user.uid, { eager: true })
     writer: User;
 
-    @ManyToOne(() => Games, (games) => games.comment)
+    @ManyToOne(() => Games, (games) => games.comment, { eager: true })
     games: Games;
 }

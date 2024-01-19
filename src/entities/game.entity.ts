@@ -18,6 +18,6 @@ export class Game {
     @Column({ default: 0 })
     selectedRatio: number;
 
-    @ManyToOne(() => Games, (games) => games.game)
+    @ManyToOne(() => Games, (games) => games.game, { eager: true })
     games: Games;
 }

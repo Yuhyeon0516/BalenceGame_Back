@@ -38,5 +38,21 @@ export namespace GameDto {
             @Expose()
             selectedRatio: number;
         }
+
+        export class MyInfo {
+            @Expose()
+            @ApiProperty({
+                description: "게임 선택 제목",
+                example: "게임 선택 제목",
+            })
+            title: string;
+
+            @Expose()
+            @ApiProperty({
+                description: "게임 선택 설명",
+                example: "게임 선택 설명",
+            })
+            description: string;
+        }
     }
 }

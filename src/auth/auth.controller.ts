@@ -9,6 +9,7 @@ import {
 } from "@nestjs/common";
 import {
     ApiBody,
+    ApiHeader,
     ApiOperation,
     ApiQuery,
     ApiResponse,
@@ -20,10 +21,10 @@ import { Serialize } from "src/interceptors/serialize.interceptor";
 import { Response } from "express";
 import { NaverAuthGuard } from "src/guard/naver.auth.guard";
 import { KakaoAuthGuard } from "src/guard/kakao.auth.guard";
+import { AuthGuard } from "src/guard/auth.guard";
 
 @ApiTags("사용자관련 API")
 @Controller("auth")
-@Serialize(UserDto.Response.SignSuccess)
 export class AuthController {
     constructor(private authService: AuthService) {}
 
@@ -39,6 +40,7 @@ export class AuthController {
         status: 400,
         description: "이미 가입된 이메일 또는 존재하는 닉네임",
     })
+    @Serialize(UserDto.Response.SignSuccess)
     signup(@Body() body: UserDto.Request.Signup) {
         return this.authService.signup(
             body.email,
@@ -56,6 +58,7 @@ export class AuthController {
     })
     @ApiResponse({ status: 400, description: "비밀번호가 틀렸을때" })
     @ApiResponse({ status: 401, description: "존재하지 않는 이메일" })
+    @Serialize(UserDto.Response.SignSuccess)
     signin(@Body() body: UserDto.Request.Signin) {
         return this.authService.signin(body.email, body.password);
     }
@@ -91,6 +94,7 @@ export class AuthController {
         summary: "네이버 로그인의 콜백",
         description: "네이버 로그인의 콜백으로 데이터를 받아오는 곳",
     })
+    @Serialize(UserDto.Response.SignSuccess)
     naverCB(@Req() req: any, @Res() res: Response) {
         const user = req.user;
         res.redirect(
@@ -118,11 +122,30 @@ export class AuthController {
         summary: "카카오 로그인의 콜백",
         description: "카카오 로그인의 콜백으로 데이터를 받아오는 곳",
     })
+    @Serialize(UserDto.Response.SignSuccess)
     kakaoCB(@Req() req: any, @Res() res: Response) {
         const user = req.user;
         res.redirect(
             `http://localhost:3000/auth/social/${user.uid}/${user.email}/${user.nickname}/${user.accessToken}`,
         );
         return res.status(200).send();
+    }
+
+    @Get("my")
+    @UseGuards(AuthGuard)
+    @ApiHeader({
+        name: "Authorization",
+        description: "Bearer {{token}}",
+    })
+    @ApiOperation({ summary: "내정보 조회", description: "내정보 조회" })
+    @ApiResponse({
+        status: 200,
+        description: "내정보 조회 성공",
+        type: UserDto.Response.MyInfo,
+    })
+    @ApiResponse({ status: 401, description: "접근권한 없음" })
+    @Serialize(UserDto.Response.MyInfo)
+    async getMyInfo(@Req() req: any) {
+        return await this.authService.getMyInfo(req.user);
     }
 }
