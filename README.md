@@ -1,3 +1,56 @@
+# BalanceGame_Backend
+
+사용자가 참여하는 밸런스게임 토이 프로젝트.
+
+프론트엔드의 경우 React를 이용하여 구현하였고, 백엔드의 경우 NestJS를 이용하여 구현하였다.
+
+-   프론트엔드: [박재현](https://github.com/jh0152park)
+-   백엔드: [김유현(나)](https://github.com/Yuhyeon0516)
+
+토이 프로젝트의 기획을 확인해보면 백엔드에서 구현이 필요한 항목은 아래와 같다.
+
+-   User
+    -   회원가입
+    -   로그인
+    -   로그아웃
+    -   마이페이지
+    -   Naver 로그인
+    -   Kakao 로그인
+-   Game
+    -   게임 만들기
+    -   모든 게임 조회
+    -   카테고리별 게임 조회
+    -   게임에 댓글 작성
+    -   어떤 선택지가 더 나은지 선택하는 투표
+    -   게임 좋아요 기능
+    -   게임 싫어요 기능
+
+그래서 아래와 같이 route를 기획하였다.
+
+-   Swagger(`/api-docs`)
+-   User(`/auth`)
+    |기능|Path|
+    |------|---|
+    |회원가입|`/signup`|
+    |로그인|`/signin`|
+    |로그아웃|`/signout`|
+    |마이페이지|`/my`|
+    |네이버로그인|`/social/naver`|
+    |카카오로그인|`/social/kakao`|
+
+-   Game(`/games`)
+    |기능|Path|
+    |------|---|
+    |게임 만들기|`/create`|
+    |모든 게임 조회|`/`|
+    |카테고리별 게임 조회|`{category}`|
+    |게임에 댓글 작성|`/{gamesId}/comment`|
+    |어떤 선택지가 더 나은지 선택하는 투표|`/{gamesId}/select`|
+    |게임 좋아요 기능|`/{gamesId}/like`|
+    |게임 싫어요 기능|`/{gamesId}/dislike`|
+
+배포는 AWS EC2를 이용하고 DB는 AWS RDS에 PostgreSQL를 이용하였다.
+
 # AWS 배포
 
 -   배포 간 참고자료
@@ -25,3 +78,11 @@
 -   https://elfinlas.github.io/nest_js/230404_naver_login_part01/
 -   https://github.com/2n-snails/nest-back/blob/main/src/auth/auth.service.ts
 -   https://velog.io/@soshin_dev/ERRHTTPHEADERSSENT-Cannot-set-headers-after-they-are-sent-to-the-client-오류
+
+# CI/CD 적용
+
+-   지금은 배포를 할때마다 EC2 ssh console에서 git pull -> npm run build -> pm2 reload \<app name>을 진행하고있음
+-   변경점이 발생할때마다 이걸 반복하자니 너무 번거로움
+-   그래서 Github Actions + EC2 + S3 + Code Deploy를 모두 활용하여 CI/CD를 구현해보려한다.
+    -   Jenkins를 이용해보려고 했으나 Jenkins를 이용하면 EC2를 하나 더 추가 구성해주어야해서 S3도 한번 사용해볼겸 EC2 + S3 조합으로 CI/CD를 구현해보려한다.
+-   일단 먼저 해야하는것 Github main branch에 PR이 들어오면 .zip으로 업로드 될 S3 Bucket을 구성하는것이다.
