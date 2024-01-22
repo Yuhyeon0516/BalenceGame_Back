@@ -29,6 +29,12 @@ export namespace UserDto {
             @IsString()
             password: string;
         }
+
+        export class ChangeNickname {
+            @ApiProperty({ description: "바꿀 닉네임", example: "닉네임23" })
+            @IsString()
+            nickname: string;
+        }
     }
 
     export namespace Response {
@@ -126,6 +132,15 @@ export namespace UserDto {
             })
             @Type(() => GamesDto.Response.MyInfo)
             createdGames: GamesDto.Response.MyInfo[];
+        }
+
+        export class ChangeNickname {
+            @Expose()
+            @ApiProperty({
+                description: "변경 후 닉네임",
+                example: "닉네임123",
+            })
+            nickname: string;
         }
     }
 }

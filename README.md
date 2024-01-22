@@ -35,6 +35,7 @@
     |로그인|`/signin`|
     |로그아웃|`/signout`|
     |마이페이지|`/my`|
+    |닉네임변경|`/nickname`|
     |네이버로그인|`/social/naver`|
     |카카오로그인|`/social/kakao`|
 

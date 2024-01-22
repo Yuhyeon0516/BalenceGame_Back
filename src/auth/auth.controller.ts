@@ -131,7 +131,7 @@ export class AuthController {
         return res.status(200).send();
     }
 
-    @Get("my")
+    @Get("/my")
     @UseGuards(AuthGuard)
     @ApiHeader({
         name: "Authorization",
@@ -147,5 +147,31 @@ export class AuthController {
     @Serialize(UserDto.Response.MyInfo)
     async getMyInfo(@Req() req: any) {
         return await this.authService.getMyInfo(req.user);
+    }
+
+    @Post("/nickname")
+    @UseGuards(AuthGuard)
+    @ApiHeader({
+        name: "Authorization",
+        description: "Bearer {{token}}",
+    })
+    @ApiOperation({ summary: "닉네임 변경", description: "닉네임 변경" })
+    @ApiResponse({
+        status: 201,
+        description: "닉네임 변경 완료",
+        type: UserDto.Response.ChangeNickname,
+    })
+    @ApiResponse({
+        status: 400,
+        description:
+            "Body에 닉네임이 없음, 닉네임을 이미 누군가 사용하고있음, 이전에 사용하던 닉네임과 동일함(메시지 내용 확인)",
+    })
+    @ApiResponse({ status: 401, description: "접근권한 없음" })
+    @Serialize(UserDto.Response.ChangeNickname)
+    async changeNickname(
+        @Body() body: UserDto.Request.ChangeNickname,
+        @Req() req: any,
+    ) {
+        return await this.authService.changeNickname(req.user, body.nickname);
     }
 }
