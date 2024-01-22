@@ -223,4 +223,23 @@ export class AuthService {
             relations: ["writedComments", "createdGames", "createdGames.game"],
         });
     }
+
+    async changeNickname(user: User, wantNickname: string) {
+        if (user.nickname === wantNickname) {
+            throw new BadRequestException(
+                "이전에 사용하던 닉네임과 동일합니다.",
+            );
+        }
+        const nicknames = await this.repo.find({
+            where: { nickname: wantNickname },
+        });
+
+        if (nicknames.length) {
+            throw new BadRequestException("이미 존재하는 닉네임입니다.");
+        }
+
+        Object.assign(user, { nickname: wantNickname });
+
+        return await this.repo.save(user);
+    }
 }
