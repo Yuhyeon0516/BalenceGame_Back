@@ -22,6 +22,7 @@ import { Response } from "express";
 import { NaverAuthGuard } from "src/guard/naver.auth.guard";
 import { KakaoAuthGuard } from "src/guard/kakao.auth.guard";
 import { AuthGuard } from "src/guard/auth.guard";
+import { ConfigService } from "@nestjs/config";
 
 @ApiTags("사용자관련 API")
 @Controller("auth")
@@ -98,7 +99,7 @@ export class AuthController {
     naverCB(@Req() req: any, @Res() res: Response) {
         const user = req.user;
         res.redirect(
-            `http://localhost:3000/auth/social/${user.uid}/${user.email}/${user.nickname}/${user.accessToken}`,
+            `https://balancegame.pages.dev/auth/social/${user.uid}/${user.email}/${user.nickname}/${user.accessToken}`,
         );
         return res.status(200).send();
     }
@@ -126,7 +127,7 @@ export class AuthController {
     kakaoCB(@Req() req: any, @Res() res: Response) {
         const user = req.user;
         res.redirect(
-            `http://localhost:3000/auth/social/${user.uid}/${user.email}/${user.nickname}/${user.accessToken}`,
+            `https://balancegame.pages.dev/auth/social/${user.uid}/${user.email}/${user.nickname}/${user.accessToken}`,
         );
         return res.status(200).send();
     }
