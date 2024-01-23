@@ -6,7 +6,10 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
     app.enableCors({
-        origin: ["http://localhost:3000", "https://jh0152park.github.io"],
+        origin: [
+            "http://localhost:3000",
+            "https://balancegame-front.pages.dev",
+        ],
         credentials: true,
         exposedHeaders: ["Authorization"],
     });
