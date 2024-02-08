@@ -197,7 +197,7 @@ export class GamesController {
         await this.gameService.update(selectedGame);
         await this.gameService.update(notSelectedGame);
 
-        return games;
+        return await this.gamesService.findById(parseInt(gamesId));
     }
 
     @Get("/:gamesId/like")

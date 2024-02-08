@@ -29,6 +29,11 @@ export class GamesService {
     async allGames() {
         return await this.repo.find({
             relations: ["game", "writer", "comment"],
+            order: {
+                game: {
+                    gameId: "ASC",
+                },
+            },
         });
     }
 
@@ -36,6 +41,11 @@ export class GamesService {
         return await this.repo.find({
             where: { category },
             relations: ["game", "writer", "comment"],
+            order: {
+                game: {
+                    gameId: "ASC",
+                },
+            },
         });
     }
 
@@ -46,6 +56,9 @@ export class GamesService {
             order: {
                 comment: {
                     createdAt: "ASC",
+                },
+                game: {
+                    gameId: "ASC",
                 },
             },
         });
